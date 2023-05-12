@@ -1,0 +1,85 @@
+---
+import BaseHead from "../../components/BaseHead.astro";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
+import { SITE_TITLE, SITE_DESCRIPTION } from "../../consts";
+
+const repos: {
+  id: number;
+  name: string;
+  html_url: string;
+  description: string;
+  topics: string[];
+  fork: boolean;
+}[] = await (
+  await fetch("https://api.github.com/users/quantqdev/repos", {
+    headers: {
+      Authorization: `Bearer ${import.meta.env.GITHUB_TOKEN}`,
+      "X-GitHub-Api-Version": "2022-11-28",
+    },
+  })
+).json();
+
+const studyRepos = repos.filter((repo) => repo.name.startsWith("study-"));
+const sampleRepos = repos.filter((repo) => repo.name.startsWith("sample-"));
+const forkRepos = repos.filter(
+  (repo) => repo.fork && !studyRepos.includes(repo)
+);
+const greatRepos = repos.filter(
+  (repo) => ![...forkRepos, ...studyRepos, ...sampleRepos].includes(repo)
+);
+
+const groups = [
+  { title: "Shared", repos: greatRepos },
+  { title: "Experiment", repos: sampleRepos },
+  { title: "Contributed", repos: forkRepos },
+  { title: "Interested", repos: studyRepos },
+];
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+    <style>
+      ul {
+        list-style-type: none;
+        padding: unset;
+      }
+      ul li {
+        display: flex;
+        flex-direction: column;
+        padding: 4px;
+        margin: 12px 0px;
+      }
+      ul li :global(time) {
+        flex: 0 0 130px;
+        font-style: italic;
+        color: #595959;
+      }
+    </style>
+  </head>
+  <body>
+    <Header />
+    <main>
+      {
+        groups.map((group) => (
+          <section>
+            <h3>{group.title}</h3>
+            <ul>
+              {group.repos.map((repo) => (
+                <li>
+                  <a href={repo.html_url} target="_blank">
+                    {repo.name}
+                  </a>
+                  <sub>{repo.description}</sub>
+                </li>
+              ))}
+            </ul>
+          </section>
+        ))
+      }
+    </main>
+    <Footer />
+  </body>
+</html>
