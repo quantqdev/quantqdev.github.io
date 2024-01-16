@@ -41,42 +41,27 @@ const groups = [
 <html lang="en">
   <head>
     <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-    <style>
-      ul {
-        list-style-type: none;
-        padding: unset;
-      }
-      ul li {
-        display: flex;
-        flex-direction: column;
-        padding: 4px;
-        margin: 12px 0px;
-      }
-      ul li :global(time) {
-        flex: 0 0 130px;
-        font-style: italic;
-        color: #595959;
-      }
-    </style>
   </head>
-  <body>
+  <body class="container">
     <Header />
     <main>
       {
         groups.map((group) => (
-          <section>
-            <h3>{group.title}</h3>
-            <ul>
+          <div class="mb-4">
+            <h3 class="text-lg font-bold">{group.title}</h3>
+            <div>
               {group.repos.map((repo) => (
-                <li>
-                  <a href={repo.html_url} target="_blank">
+                <div>
+                  <a href={repo.html_url} target="_blank" class="text-base">
                     {repo.name}
                   </a>
-                  <sub>{repo.description}</sub>
-                </li>
+                  <span class="text-sm font-light italic">
+                    {repo.description}
+                  </span>
+                </div>
               ))}
-            </ul>
-          </section>
+            </div>
+          </div>
         ))
       }
     </main>

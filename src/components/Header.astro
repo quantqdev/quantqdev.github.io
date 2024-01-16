@@ -1,23 +1,16 @@
 ---
 import HeaderLink from "./HeaderLink.astro";
 import { SITE_TITLE } from "../consts";
+import { ModeToggle } from "@/components/react/ModeToggle";
 ---
 
 <header>
-  <h2>
-    {SITE_TITLE}
-  </h2>
-  <nav>
-    <HeaderLink href="/">Home</HeaderLink>
-    <HeaderLink href="/blog">Blog</HeaderLink>
-    <HeaderLink href="/repositories">Repositories</HeaderLink>
-  </nav>
+  <div class="flex justify-between border-b-[1px] items-center my-2">
+    <nav class="flex gap-x-2">
+      <HeaderLink href="/">Home</HeaderLink>
+      <HeaderLink href="/blog">Blog</HeaderLink>
+      <HeaderLink href="/repositories">Repositories</HeaderLink>
+    </nav>
+    <ModeToggle client:load />
+  </div>
 </header>
-<style>
-  header {
-    margin: 0em 0 2em;
-  }
-  h2 {
-    margin: 0.5em 0;
-  }
-</style>
